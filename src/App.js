@@ -40,28 +40,31 @@ class App extends Component {
 
   burnWoodShavings() {
     if (!this.state.fireBurning) {
-      this.dihydrogenMonoxideViaCombustion = setInterval(() => {
-        if (this.state.hydrogen >= 1 &&
-          (this.state.oxygen.tank1 + this.state.oxygen.tank2) >= 25) {
-          this.setState({
-            fireBurning: true,
-            hydrogen: this.state.hydrogen - 0.8,
-            oxygen: update(
-              this.state.oxygen,
-              {
-                tank1: { $apply: (val) => (val - 0.5) },
-                tank2: { $apply: (val) => (val + 0.1) },
-              }
-            ),
-            water: this.state.water + 0.8,
-          });
-        } else {
-          clearInterval(this.dihydrogenMonoxideViaCombustion);
-          this.setState({
-            fireBurning: false,
-          });
-        }
-      }, 1250);
+      this.setState({
+        fireBurning: true,
+      }, () => {
+        this.dihydrogenMonoxideViaCombustion = setInterval(() => {
+          if (this.state.hydrogen >= 1 &&
+            (this.state.oxygen.tank1 + this.state.oxygen.tank2) >= 25) {
+            this.setState({
+              hydrogen: this.state.hydrogen - 0.8,
+              oxygen: update(
+                this.state.oxygen,
+                {
+                  tank1: { $apply: (val) => (val - 0.5) },
+                  tank2: { $apply: (val) => (val + 0.1) },
+                }
+              ),
+              water: this.state.water + 0.8,
+            });
+          } else {
+            clearInterval(this.dihydrogenMonoxideViaCombustion);
+            this.setState({
+              fireBurning: false,
+            });
+          }
+        }, 1250);
+      });
     }
   }
 
@@ -73,13 +76,16 @@ class App extends Component {
         hydrazineValveOpen: false,
       });
     } else {
-      this.hydrazineDrip = setInterval(() => {
-        this.setState({
-          hydrazine: this.state.hydrazine - 1,
-          hydrazineValveOpen: true,
-          hydrogen: this.state.hydrogen + 2,
-        });
-      }, 1500);
+      this.setState({
+        hydrazineValveOpen: true,
+      }, () => {
+        this.hydrazineDrip = setInterval(() => {
+          this.setState({
+            hydrazine: this.state.hydrazine - 1,
+            hydrogen: this.state.hydrogen + 2,
+          });
+        }, 1500);
+      });
     }
   }
 
