@@ -38,14 +38,21 @@ class App extends Component {
     }, 5000);
   }
 
+  readyToCombust() {
+    return this.state.hydrogen > 1 && this.totalOxygen() > 25;
+  }
+
+  totalOxygen() {
+    return this.state.oxygen.tank1 + this.state.oxygen.tank2;
+  }
+
   burnWoodShavings() {
-    if (!this.state.fireBurning) {
+    if (!this.state.fireBurning && this.readyToCombust()) {
       this.setState({
         fireBurning: true,
       }, () => {
         this.dihydrogenMonoxideViaCombustion = setInterval(() => {
-          if (this.state.hydrogen >= 1 &&
-            (this.state.oxygen.tank1 + this.state.oxygen.tank2) >= 25) {
+          if (this.readyToCombust()) {
             this.setState({
               hydrogen: this.state.hydrogen - 0.8,
               oxygen: update(
