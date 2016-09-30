@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import update from 'react-addons-update';
 
 import './App.css';
@@ -23,6 +23,12 @@ class App extends Component {
     this.burnWoodShavings = this.burnWoodShavings.bind(this);
     this.toggleHydrazineValve = this.toggleHydrazineValve.bind(this);
   }
+
+  static propTypes = {
+    api: PropTypes.shape({
+      burnWoodShavings: PropTypes.func.isRequired,
+    }),
+  };
 
   componentDidMount() {
     this.staticElectricity = setInterval(() => {
