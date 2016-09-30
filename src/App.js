@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import update from 'react-addons-update';
 
+import { readyToCombust, totalOxygen } from './utils';
+
 import './App.css';
 
 class App extends Component {
@@ -50,8 +52,8 @@ class App extends Component {
         fireBurning: true,
       }, () => {
         this.dihydrogenMonoxideViaCombustion = setInterval(() => {
-          if (this.state.hydrogen >= 1 &&
-            (this.state.oxygen.tank1 + this.state.oxygen.tank2) >= 25) {
+          const { tank1, tank2 } = this.state.oxygen;
+          if (readyToCombust(this.state.hydrogen, totalOxygen(tank1, tank2))) {
             this.setState({
               hydrogen: this.state.hydrogen - 0.8,
               oxygen: update(
