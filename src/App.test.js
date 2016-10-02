@@ -9,7 +9,12 @@ jest.useFakeTimers();
 describe('a Martian Water Factory', () => {
   let wrapper;
   beforeEach(() => {
-    wrapper = mount(<App />);
+    const intervals = {
+      dihydrogenMonoxideViaCombustion: 12.5,
+      hydrazineDrip: 15,
+      staticElectricity: 50,
+    };
+    wrapper = mount(<App intervals={intervals} />);
   });
 
   describe('hydrazine valve', () => {
@@ -24,7 +29,8 @@ describe('a Martian Water Factory', () => {
 
     it('drips hydrazine at a rate of 1 unit per 1.5 seconds, producing 2x H₂', () => {
       wrapper.find('.Hydrazine').find('button').simulate('click');
-      expect(setInterval.mock.calls[setInterval.mock.calls.length - 1][1]).toBe(1500);
+      expect(setInterval.mock.calls[setInterval.mock.calls.length - 1][1])
+        .toBe(wrapper.prop('intervals').hydrazineDrip);
 
       jest.runOnlyPendingTimers();
 
@@ -67,6 +73,7 @@ describe('a Martian Water Factory', () => {
 
       jest.runOnlyPendingTimers();
       // jest.runAllTimers();
+      // jest.runTimersToTime(10 * intervals.dihydrogenMonoxideViaCombustion);
 
       expect(wrapper.state('hydrogen')).toEqual(0);
       expect(wrapper.state('fireBurning')).toBeFalsy();
