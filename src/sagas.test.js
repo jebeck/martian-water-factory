@@ -75,6 +75,20 @@ describe('complex action creators (sagas)', () => {
       expect(saga.next({ stop: false }).value.SELECT).toBeDefined();
       expect(saga.next(false).done).toBeTruthy();
     });
+
+    it('should have a failsafe to prevent dangerous H₂ buildup', () => {
+      const saga = hydrazineDrip();
+      expect(saga.next().value.SELECT).toBeDefined();
+      expect(saga.next(true).value).toEqual(race({
+        stop: take([ actionTypes.TOGGLE_HYDRAZINE_VALVE, actionTypes.EXPLOSION ]),
+        drip: call(delay, intervals.HYDRAZINE_DRIP),
+      }));
+      expect(saga.next({ stop: false }).value.SELECT).toBeDefined();
+      expect(saga.next({
+        hydrazineLeft: true,
+        hydrogenAtSafeLevel: false,
+      }).done).toBeTruthy();
+    });
   });
 
   describe('oxyhydrogenCombustion', () => {
