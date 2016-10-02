@@ -177,8 +177,13 @@ export function* hydrazineDrip() {
         drip: call(delay, intervals.HYDRAZINE_DRIP),
       });
       if (!stop) {
-        const hydrazineLeft = yield select((state) => { return state.hydrazine >= 1; });
-        if (hydrazineLeft) {
+        const { hydrazineLeft, hydrogenAtSafeLevel } = yield select((state) => {
+          return {
+            hydrazineLeft: state.hydrazine >= 1,
+            hydrogenAtSafeLevel: state.hydrogen < 23,
+          };
+        });
+        if (hydrazineLeft && hydrogenAtSafeLevel) {
           yield [
             put({
               type: actionTypes.HYDRAZINE_USED,
@@ -190,6 +195,7 @@ export function* hydrazineDrip() {
             }),
           ];
         } else {
+          yield put({ type: actionTypes.TOGGLE_HYDRAZINE_VALVE });
           break;
         }
       } else {

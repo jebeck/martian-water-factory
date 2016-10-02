@@ -44,7 +44,10 @@ describe('complex action creators (sagas)', () => {
         drip: call(delay, intervals.HYDRAZINE_DRIP),
       }));
       expect(saga.next({ stop: false }).value.SELECT).toBeDefined();
-      const nextParallel = saga.next(true).value;
+      const nextParallel = saga.next({
+        hydrazineLeft: true,
+        hydrogenAtSafeLevel: true,
+      }).value;
       expect(nextParallel[0].PUT.action.type).toEqual(actionTypes.HYDRAZINE_USED);
       expect(nextParallel[1].PUT.action.type).toEqual(actionTypes.HYDROGEN_PRODUCED);
     });
@@ -54,7 +57,10 @@ describe('complex action creators (sagas)', () => {
       expect(saga.next().value.SELECT).toBeDefined();
       expect(saga.next(true).value.RACE).toBeDefined();
       expect(saga.next({ stop: false }).value.SELECT).toBeDefined();
-      const nextParallel = saga.next(true).value;
+      const nextParallel = saga.next({
+        hydrazineLeft: true,
+        hydrogenAtSafeLevel: true,
+      }).value;
       expect(nextParallel[0]).toEqual(put({
         type: actionTypes.HYDRAZINE_USED,
         payload: { amount: 1 },
@@ -73,6 +79,10 @@ describe('complex action creators (sagas)', () => {
         drip: call(delay, intervals.HYDRAZINE_DRIP),
       }));
       expect(saga.next({ stop: false }).value.SELECT).toBeDefined();
+      expect(saga.next({
+        hydrazineLeft: true,
+        hydrogenAtSafeLevel: false,
+      }).value).toEqual(put({ type: actionTypes.TOGGLE_HYDRAZINE_VALVE }));
       expect(saga.next(false).done).toBeTruthy();
     });
 
@@ -87,7 +97,8 @@ describe('complex action creators (sagas)', () => {
       expect(saga.next({
         hydrazineLeft: true,
         hydrogenAtSafeLevel: false,
-      }).done).toBeTruthy();
+      }).value).toEqual(put({ type: actionTypes.TOGGLE_HYDRAZINE_VALVE }));
+      expect(saga.next().done).toBeTruthy();
     });
   });
 
