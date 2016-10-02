@@ -26,9 +26,9 @@ class App extends Component {
 
   static defaultProps = {
     intervals: {
-      dihydrogenMonoxideViaCombustion: 1250,
-      hydrazineDrip: 1500,
-      staticElectricity: 5000,
+      dihydrogenMonoxideViaCombustion: 125,
+      hydrazineDrip: 150,
+      staticElectricity: 500,
     },
   };
 
@@ -103,10 +103,17 @@ class App extends Component {
         hydrazineValveOpen: true,
       }, () => {
         this.hydrazineDrip = setInterval(() => {
-          this.setState({
-            hydrazine: this.state.hydrazine - 1,
-            hydrogen: this.state.hydrogen + 2,
-          });
+          if (this.state.hydrogen < 23) {
+            this.setState({
+              hydrazine: this.state.hydrazine - 1,
+              hydrogen: this.state.hydrogen + 2,
+            });
+          } else {
+            clearInterval(this.hydrazineDrip);
+            this.setState({
+              hydrazineValveOpen: false,
+            });
+          }
         }, this.props.intervals.hydrazineDrip);
       });
     }
