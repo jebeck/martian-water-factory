@@ -24,6 +24,14 @@ class App extends Component {
     this.toggleHydrazineValve = this.toggleHydrazineValve.bind(this);
   }
 
+  static defaultProps = {
+    intervals: {
+      staticElectricity: 500,
+      hydrazineDrip: 150,
+      dihydrogenMonoxideViaCombustion: 125,
+    },
+  };
+
   componentDidMount() {
     this.staticElectricity = setInterval(() => {
       if (this.state.hydrogen > 25) {
@@ -35,7 +43,7 @@ class App extends Component {
         clearInterval(this.dihydrogenMonoxideViaCombustion);
         clearInterval(this.hydrazineDrip);
       }
-    }, 5000);
+    }, this.props.intervals.staticElectricity);
   }
 
   burnWoodShavings() {
@@ -63,7 +71,7 @@ class App extends Component {
               fireBurning: false,
             });
           }
-        }, 1250);
+        }, this.props.intervals.dihydrogenMonoxideViaCombustion);
       });
     }
   }
@@ -84,7 +92,7 @@ class App extends Component {
             hydrazine: this.state.hydrazine - 1,
             hydrogen: this.state.hydrogen + 2,
           });
-        }, 1500);
+        }, this.props.intervals.hydrazineDrip);
       });
     }
   }
