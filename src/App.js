@@ -26,10 +26,11 @@ class App extends Component {
 
   static defaultProps = {
     intervals: {
-      staticElectricity: 500,
-      hydrazineDrip: 150,
-      dihydrogenMonoxideViaCombustion: 125,
+      staticElectricity: 5000,
+      hydrazineDrip: 1500,
+      dihydrogenMonoxideViaCombustion: 1250,
     },
+    rate: 10,
   };
 
   componentDidMount() {
@@ -52,18 +53,18 @@ class App extends Component {
         fireBurning: true,
       }, () => {
         this.dihydrogenMonoxideViaCombustion = setInterval(() => {
-          if (this.state.hydrogen >= 1 &&
+          if (this.state.hydrogen >= this.props.rate &&
             (this.state.oxygen.tank1 + this.state.oxygen.tank2) >= 25) {
             this.setState({
-              hydrogen: this.state.hydrogen - 0.8,
+              hydrogen: this.state.hydrogen - (0.8 * this.props.rate),
               oxygen: update(
                 this.state.oxygen,
                 {
-                  tank1: { $apply: (val) => (val - 0.5) },
-                  tank2: { $apply: (val) => (val + 0.1) },
+                  tank1: { $apply: (val) => (val - (0.5 * this.props.rate)) },
+                  tank2: { $apply: (val) => (val + (0.1 * this.props.rate)) },
                 }
               ),
-              water: this.state.water + 0.8,
+              water: this.state.water + (0.8 * this.props.rate),
             });
           } else {
             clearInterval(this.dihydrogenMonoxideViaCombustion);
@@ -89,8 +90,8 @@ class App extends Component {
       }, () => {
         this.hydrazineDrip = setInterval(() => {
           this.setState({
-            hydrazine: this.state.hydrazine - 1,
-            hydrogen: this.state.hydrogen + 2,
+            hydrazine: this.state.hydrazine - this.props.rate,
+            hydrogen: this.state.hydrogen + 2 * this.props.rate,
           });
         }, this.props.intervals.hydrazineDrip);
       });
