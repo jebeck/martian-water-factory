@@ -1,0 +1,14 @@
+.Chimney {
+  fill: GhostWhite;
+  stroke: SteelBlue;
+  stroke-width: 5px;
+}
+
+.Sparker {
+  fill: Crimson;
+  stroke: SteelBlue;
+  stroke-width: 5px;
+}
+.Sparker:hover {
+  fill: Red;
+}

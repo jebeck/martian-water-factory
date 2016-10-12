@@ -7,6 +7,7 @@ import {
   intervals,
   hydrazineDrip,
   oxyhydrogenCombustion,
+  spark,
   staticElectricity,
   watchBurnWoodShavings,
   watchHydrazineValve,
@@ -264,9 +265,10 @@ describe('complex action creators (sagas)', () => {
 
     it('should watch for every BURN_WOOD_SHAVINGS to call oxyhydrogenCombustion', () => {
       const watcher = watchBurnWoodShavings();
-      expect(watcher.next().value).toEqual(call(
-        takeEvery, actionTypes.BURN_WOOD_SHAVINGS, oxyhydrogenCombustion
-      ));
+      expect(watcher.next().value).toEqual([
+        call(takeEvery, actionTypes.BURN_WOOD_SHAVINGS, spark),
+        call(takeEvery, actionTypes.BURN_WOOD_SHAVINGS, oxyhydrogenCombustion),
+      ]);
     });
   });
 

@@ -7,20 +7,21 @@
   width: 100vw;
 }
 
-.Explosion {
-  color: red;
-  position: fixed;
-  left: 25vw;
-  top: 17.5vh;
-
-  width: 50vw;
+.Hab > div {
+  flex-basis: 12vw;
+  height: 100%;
 }
 
 .Hab {
   display: flex;
   justify-content: space-around;
-  align-items: baseline;
 
   height: 75vh;
-  width: 100%;
+  width: 80%;
+
+  margin: 0 auto;
+}
+
+.ChimneyAndSparker {
+  position: relative;
 }

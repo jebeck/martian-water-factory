@@ -12,10 +12,13 @@
     "react-scripts": "0.4.3"
   },
   "dependencies": {
+    "chance": "^1.0.4",
     "lodash": "^4.16.2",
     "react": "^15.3.1",
     "react-addons-update": "^15.3.1",
+    "react-dimensions": "^2.0.0-alpha1",
     "react-dom": "^15.3.1",
+    "react-motion": "^0.4.5",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0",
     "redux-logger": "^2.6.1",

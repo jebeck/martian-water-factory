@@ -7,41 +7,60 @@ import { burnWoodShavings, toggleHydrazineValve } from './state';
 
 import './App.css';
 
+import Chimney from './Chimney';
+import Explosion from './Explosion';
+import Spark from './Spark';
+import Tank from './Tank';
+import ValveTank from './ValveTank';
+
 export const App = (props) => {
   function renderExplosion() {
-    if (props.explosion) {
-      return (
-        <h1 className="Explosion"><marquee>BOOM! BOOM! BOOM!</marquee></h1>
-      );
-    }
-    return null;
+    return (
+      <Explosion active={props.explosion} />
+    );
   }
 
   return (
     <div className="App">
+      {renderExplosion()}
       <div className="Hab">
-        {renderExplosion()}
         <div className="OxygenTank">
-          <h3>O₂ Tank #1</h3>
-          <p>{`${Math.round(props.oxygen.tank1)}L`}</p>
+          <Tank
+            capacity={200}
+            color="Aquamarine"
+            label="O₂ Tank #1"
+            level={props.oxygen.tank1}
+          />
         </div>
         <div className="Hydrazine">
-          <h3>Hydrazine</h3>
-          <p>{`${props.hydrazine}L`}</p>
-          <button onClick={props.toggleHydrazineValve}>
-            {props.hydrazineValveOpen ? 'Close Valve' : 'Open Valve'}
-          </button>
+          <ValveTank
+            capacity={300}
+            color="Coral"
+            label="Hydrazine"
+            level={props.hydrazine}
+            toggleValve={props.toggleHydrazineValve}
+            valveIsOpen={props.hydrazineValveOpen}
+          />
         </div>
-        <div className="Chimney">
-          <button onClick={props.burnWoodShavings}>Burn Wood Shavings</button>
+        <div className="ChimneyAndSparker">
+          <Spark active={props.sparked} fireBurning={props.fireBurning} />
+          <Chimney burn={props.burnWoodShavings} />
         </div>
         <div className="WaterTank">
-          <h3>Water</h3>
-          <p>{`${Math.round(props.water)}L`}</p>
+          <Tank
+            capacity={600}
+            color="CornflowerBlue"
+            label="Water"
+            level={props.water}
+          />
         </div>
         <div className="OxygenTank">
-          <h3>O₂ Tank #2</h3>
-          <p>{`${Math.round(props.oxygen.tank2)}L`}</p>
+          <Tank
+            capacity={200}
+            color="Aquamarine"
+            label="O₂ Tank #2"
+            level={props.oxygen.tank2}
+          />
         </div>
       </div>
     </div>
@@ -62,6 +81,7 @@ App.propTypes = {
     tank1: PropTypes.number.isRequired,
     tank2: PropTypes.number.isRequired,
   }).isRequired,
+  sparked: PropTypes.bool.isRequired,
   toggleHydrazineValve: PropTypes.func.isRequired,
   water: PropTypes.number.isRequired,
 };

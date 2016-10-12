@@ -6,6 +6,7 @@ import {
   hydrazineValveOpen,
   hydrogen,
   oxygen,
+  sparked,
   water,
 } from './state';
 
@@ -153,6 +154,20 @@ describe('oxygen', () => {
     // test to be sure not mutating state object!
     // but rather returning new...
     expect(result).not.toBe(initialState);
+  });
+});
+
+describe('sparked', () => {
+  it('should return `false` for initial state', () => {
+    expect(sparked(undefined, {})).toEqual(false);
+  });
+
+  it('should handle SPARK', () => {
+    expect(sparked(undefined, { type: actionTypes.SPARK })).toEqual(true);
+  });
+
+  it('should handle SPARK_DEATH', () => {
+    expect(sparked(undefined, { type: actionTypes.SPARK_DEATH })).toEqual(false);
   });
 });
 

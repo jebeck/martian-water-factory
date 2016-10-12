@@ -12,6 +12,7 @@ export const intervals = {
   STATIC_ELECTRICITY: 5000,
   HYDRAZINE_DRIP: 1500,
   OXYHYDROGEN_COMBUSTION: 1250,
+  SPARK: 1500,
 };
 
 export function configureStore(initialState) {
@@ -24,6 +25,7 @@ export function configureStore(initialState) {
     hydrazineValveOpen,
     hydrogen,
     oxygen,
+    sparked,
     water,
   });
 
@@ -47,6 +49,8 @@ export const actionTypes = {
   HYDROGEN_USED: 'HYDROGEN_USED',
   OXYGEN_STORED: 'OXYGEN_STORED',
   OXYGEN_USED: 'OXYGEN_USED',
+  SPARK: 'SPARK',
+  SPARK_DEATH: 'SPARK_DEATH',
   TOGGLE_HYDRAZINE_VALVE: 'TOGGLE_HYDRAZINE_VALVE',
   WATER_PRODUCED: 'WATER_PRODUCED',
 };
@@ -154,6 +158,17 @@ export function oxygen(state = { tank1: 144, tank2: 179 }, action) {
   }
 }
 
+export function sparked(state = false, action) {
+  switch(action.type) {
+    case actionTypes.SPARK:
+      return true;
+    case actionTypes.SPARK_DEATH:
+      return false;
+    default:
+      return state;
+  }
+}
+
 export function water(state = 0, action) {
   switch(action.type) {
     case actionTypes.WATER_PRODUCED:
@@ -169,6 +184,16 @@ export function water(state = 0, action) {
  * GREAT blog post for an introduction to redux-saga:
  * http://jaysoo.ca/2016/01/03/managing-processes-in-redux-using-sagas/
  */
+
+export function* spark() {
+  yield put({
+    type: actionTypes.SPARK,
+  });
+  yield call(delay, intervals.SPARK);
+  yield put({
+    type: actionTypes.SPARK_DEATH,
+  });
+}
 
 export function* hydrazineDrip() {
   const hydrazineValveOpen = yield select((state) => (state.hydrazineValveOpen));
@@ -293,7 +318,10 @@ export function* staticElectricity() {
 }
 
 export function* watchBurnWoodShavings() {
-  yield call(takeEvery, actionTypes.BURN_WOOD_SHAVINGS, oxyhydrogenCombustion);
+  yield [
+    call(takeEvery, actionTypes.BURN_WOOD_SHAVINGS, spark),
+    call(takeEvery, actionTypes.BURN_WOOD_SHAVINGS, oxyhydrogenCombustion),
+  ];
 }
 
 export function* watchHydrazineValve() {

@@ -1,0 +1,12 @@
+.ValveTank-container {
+  fill: SlateGrey;
+}
+
+.ValveTank-highlight {
+  stroke: GhostWhite;
+}
+
+.ValveTank-ridge, .ValveTank-cap {
+  stroke: SlateGrey;
+  stroke-linecap: round;
+}
