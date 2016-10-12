@@ -16,6 +16,8 @@ class ValveTank extends Component {
   static propTypes = {
     capacity: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
+    containerHeight: PropTypes.number.isRequired,
+    containerWidth: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
     level: PropTypes.number.isRequired,
     toggleValve: PropTypes.func.isRequired,

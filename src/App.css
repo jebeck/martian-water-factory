@@ -12,15 +12,6 @@
   height: 100%;
 }
 
-.Explosion {
-  color: red;
-  position: fixed;
-  left: 25vw;
-  top: 17.5vh;
-
-  width: 50vw;
-}
-
 .Hab {
   display: flex;
   justify-content: space-around;
@@ -29,4 +20,8 @@
   width: 80%;
 
   margin: 0 auto;
+}
+
+.ChimneyAndSparker {
+  position: relative;
 }

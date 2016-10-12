@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import update from 'react-addons-update';
 
+import Chimney from './Chimney';
+import Explosion from './Explosion';
+import Spark from './Spark';
 import Tank from './Tank';
 import ValveTank from './ValveTank';
 
@@ -20,6 +23,7 @@ class App extends Component {
       // 300L hydrazine capable of making 600L water
       hydrazine: 300,
       hydrazineValveOpen: false,
+      sparked: false,
       water: 0,
       hydrogen: 0,
     };
@@ -51,6 +55,15 @@ class App extends Component {
   }
 
   burnWoodShavings() {
+    this.setState({
+      sparked: true
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          sparked: false,
+        });
+      }, 75);
+    });
     if (!this.state.fireBurning) {
       this.setState({
         fireBurning: true,
@@ -102,19 +115,16 @@ class App extends Component {
   }
 
   renderExplosion() {
-    if (this.state.explosion) {
-      return (
-        <h1 className="Explosion"><marquee>BOOM! BOOM! BOOM!</marquee></h1>
-      );
-    }
-    return null;
+    return (
+      <Explosion active={this.state.explosion} />
+    );
   }
 
   render() {
     return (
       <div className="App">
+        {this.renderExplosion()}
         <div className="Hab">
-          {this.renderExplosion()}
           <div className="OxygenTank">
             <Tank
               capacity={200}
@@ -133,8 +143,9 @@ class App extends Component {
               valveIsOpen={this.state.hydrazineValveOpen}
             />
           </div>
-          <div className="Chimney">
-            <button onClick={this.burnWoodShavings}>Burn Wood Shavings</button>
+          <div className="ChimneyAndSparker">
+            <Spark active={this.state.sparked} fireBurning={this.state.fireBurning} />
+            <Chimney burn={this.burnWoodShavings} />
           </div>
           <div className="WaterTank">
             <Tank

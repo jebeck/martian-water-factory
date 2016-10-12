@@ -8,6 +8,7 @@
     "react-scripts": "0.4.3"
   },
   "dependencies": {
+    "chance": "^1.0.4",
     "react": "^15.3.1",
     "react-addons-update": "^15.3.1",
     "react-dimensions": "^2.0.0-alpha1",

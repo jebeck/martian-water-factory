@@ -7,6 +7,9 @@ import './Tank.css';
 class Tank extends Component {
   static propTypes = {
     capacity: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired,
+    containerHeight: PropTypes.number.isRequired,
+    containerWidth: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
     level: PropTypes.number.isRequired,
   };
