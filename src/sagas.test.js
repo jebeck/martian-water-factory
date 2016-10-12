@@ -53,6 +53,7 @@ describe('complex action creators (sagas)', () => {
     });
 
     it('drips hydrazine at a rate of 1 unit per 1.5 seconds, producing 2x H₂', () => {
+      const RATE = 5;
       const saga = hydrazineDrip();
       expect(saga.next().value.SELECT).toBeDefined();
       expect(saga.next(true).value.RACE).toBeDefined();
@@ -63,11 +64,11 @@ describe('complex action creators (sagas)', () => {
       }).value;
       expect(nextParallel[0]).toEqual(put({
         type: actionTypes.HYDRAZINE_USED,
-        payload: { amount: 1 },
+        payload: { amount: 1 * RATE },
       }));
       expect(nextParallel[1]).toEqual(put({
         type: actionTypes.HYDROGEN_PRODUCED,
-        payload: { amount: 2 },
+        payload: { amount: 2 * RATE },
       }));
     });
 
@@ -237,11 +238,12 @@ describe('complex action creators (sagas)', () => {
         .toEqual(call(delay, intervals.STATIC_ELECTRICITY));
     });
 
-    it('should cause an explosion and end if the 💥 occurs when H₂ is > 25', () => {
+    it('should cause an explosion and end if the 💥 occurs when H₂ is > (25 * RATE)', () => {
+      const RATE = 5;
       const saga = staticElectricity();
       expect(saga.next().value.CALL).toBeDefined();
       expect(saga.next().value.SELECT).toBeDefined();
-      expect(saga.next(30).value)
+      expect(saga.next((25 * RATE) + 5).value)
         .toEqual(put({ type: actionTypes.EXPLOSION }));
       expect(saga.next().done).toBeTruthy();
     });

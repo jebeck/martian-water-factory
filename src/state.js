@@ -6,10 +6,12 @@ import { call, put, race, select, take } from 'redux-saga/effects';
 
 import * as utils from './utils';
 
+const RATE = 5;
+
 export const intervals = {
-  STATIC_ELECTRICITY: 500,
-  HYDRAZINE_DRIP: 150,
-  OXYHYDROGEN_COMBUSTION: 125,
+  STATIC_ELECTRICITY: 5000,
+  HYDRAZINE_DRIP: 1500,
+  OXYHYDROGEN_COMBUSTION: 1250,
 };
 
 export function configureStore(initialState) {
@@ -180,18 +182,18 @@ export function* hydrazineDrip() {
         const { hydrazineLeft, hydrogenAtSafeLevel } = yield select((state) => {
           return {
             hydrazineLeft: state.hydrazine >= 1,
-            hydrogenAtSafeLevel: state.hydrogen < 23,
+            hydrogenAtSafeLevel: state.hydrogen < ((25 * RATE/2) - (2 * RATE)),
           };
         });
         if (hydrazineLeft && hydrogenAtSafeLevel) {
           yield [
             put({
               type: actionTypes.HYDRAZINE_USED,
-              payload: { amount: 1 },
+              payload: { amount: 1 * RATE },
             }),
             put({
               type: actionTypes.HYDROGEN_PRODUCED,
-              payload: { amount: 2 },
+              payload: { amount: 2 * RATE },
             }),
           ];
         } else {
@@ -248,19 +250,19 @@ export function* oxyhydrogenCombustion(action) {
               yield [
                 put({
                   type: actionTypes.HYDROGEN_USED,
-                  payload: { amount: 0.8 },
+                  payload: { amount: 0.8 * RATE },
                 }),
                 put({
                   type: actionTypes.OXYGEN_USED,
-                  payload: { amount: 0.5 },
+                  payload: { amount: 0.5 * RATE },
                 }),
                 put({
                   type: actionTypes.OXYGEN_STORED,
-                  payload: { amount: 0.1 },
+                  payload: { amount: 0.1 * RATE },
                 }),
                 put({
                   type: actionTypes.WATER_PRODUCED,
-                  payload: { amount: 0.8 },
+                  payload: { amount: 0.8 * RATE },
                 }),
               ];
             } else {
@@ -283,7 +285,7 @@ export function* staticElectricity() {
   while (true) {
     yield call(delay, intervals.STATIC_ELECTRICITY);
     const hydrogen = yield select((state) => { return state.hydrogen; });
-    if (hydrogen > 25) {
+    if (hydrogen > (25 * RATE/2)) {
       yield put({ type: actionTypes.EXPLOSION });
       break;
     }
