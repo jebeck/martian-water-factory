@@ -7,6 +7,11 @@
   width: 100vw;
 }
 
+.Hab > div {
+  flex-basis: 12vw;
+  height: 100%;
+}
+
 .Explosion {
   color: red;
   position: fixed;
@@ -19,8 +24,9 @@
 .Hab {
   display: flex;
   justify-content: space-around;
-  align-items: baseline;
 
   height: 75vh;
-  width: 100%;
+  width: 80%;
+
+  margin: 0 auto;
 }

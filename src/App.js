@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import update from 'react-addons-update';
 
+import Tank from './Tank';
+import ValveTank from './ValveTank';
+
 import './App.css';
 
 class App extends Component {
@@ -30,12 +33,12 @@ class App extends Component {
       hydrazineDrip: 1500,
       dihydrogenMonoxideViaCombustion: 1250,
     },
-    rate: 10,
+    rate: 5,
   };
 
   componentDidMount() {
     this.staticElectricity = setInterval(() => {
-      if (this.state.hydrogen > 25) {
+      if (this.state.hydrogen > (25 * this.props.rate/2)) {
         this.setState({
           explosion: true,
           fireBurning: false,
@@ -113,26 +116,41 @@ class App extends Component {
         <div className="Hab">
           {this.renderExplosion()}
           <div className="OxygenTank">
-            <h3>O₂ Tank #1</h3>
-            <p>{`${Math.round(this.state.oxygen.tank1)}L`}</p>
+            <Tank
+              capacity={200}
+              color="Aquamarine"
+              label="O₂ Tank #1"
+              level={this.state.oxygen.tank1}
+            />
           </div>
           <div className="Hydrazine">
-            <h3>Hydrazine</h3>
-            <p>{`${this.state.hydrazine}L`}</p>
-            <button onClick={this.toggleHydrazineValve}>
-              {this.state.hydrazineValveOpen ? 'Close Valve' : 'Open Valve'}
-            </button>
+            <ValveTank
+              capacity={300}
+              color="Coral"
+              label="Hydrazine"
+              level={this.state.hydrazine}
+              toggleValve={this.toggleHydrazineValve}
+              valveIsOpen={this.state.hydrazineValveOpen}
+            />
           </div>
           <div className="Chimney">
             <button onClick={this.burnWoodShavings}>Burn Wood Shavings</button>
           </div>
           <div className="WaterTank">
-            <h3>Water</h3>
-            <p>{`${Math.round(this.state.water)}L`}</p>
+            <Tank
+              capacity={600}
+              color="CornflowerBlue"
+              label="Water"
+              level={this.state.water}
+            />
           </div>
           <div className="OxygenTank">
-            <h3>O₂ Tank #2</h3>
-            <p>{`${Math.round(this.state.oxygen.tank2)}L`}</p>
+            <Tank
+              capacity={200}
+              color="Aquamarine"
+              label="O₂ Tank #2"
+              level={this.state.oxygen.tank2}
+            />
           </div>
         </div>
       </div>
